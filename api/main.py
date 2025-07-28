@@ -26,12 +26,13 @@ from api.routers import (
     audit_router,
     log_router,
     tool_log_router,
-    mcp_router,
+    mcp_sse_router,
+    mcp_stream_router,
     static_router,
     openapi_router,
     tag_router,
 )
-from api.routers.mcp_router import mcp_server_lifespan
+from api.routers.mcp_stream_router import mcp_stream_session_manager
 from api.utils.init_admin import init_admin_user
 
 # Get configuration
@@ -61,11 +62,13 @@ async def lifespan(app: FastAPI):
     async with get_session() as db:
         await init_admin_user(db)
 
-    # Initialize MCP server
-    async with mcp_server_lifespan():
-        logger.info("MCP server initialized")
-        yield
-        logger.info("MCP server shutdown")
+    # Start MCP Stream Session Manager
+    async with mcp_stream_session_manager.run():
+        logger.info("MCP Stream Session Manager started!")
+        try:
+            yield
+        finally:
+            logger.info("MCP Stream Session Manager shutting down...")
 
     # Shutdown
     logger.info("Shutting down...")
@@ -109,8 +112,9 @@ app.include_router(openapi_router.router, prefix="/api/v1")
 app.include_router(tool_log_router.router, prefix="/api/v1")
 app.include_router(tag_router.router, prefix="/api/v1")
 
-# Add MCP router
-app.include_router(mcp_router.router)
+# Add MCP routers
+app.include_router(mcp_sse_router.router)
+app.include_router(mcp_stream_router.router)
 
 
 @app.get("/api/v1/system")
