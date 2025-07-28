@@ -148,7 +148,7 @@ docker-compose -f docker/docker-compose.mysql.yml up -d
 | PORT | 8000 | 服务器端口 |
 | JWT_SECRET_KEY | easy_mcp_production_secret_key_change_me | JWT 密钥 |
 | ADMIN_USERNAME | admin | 管理员用户名 |
-| ADMIN_PASSWORD | admin123 | 管理员密码 |
+| ADMIN_PASSWORD | admin | 管理员密码 |
 | ADMIN_EMAIL | admin@example.com | 管理员邮箱 |
 
 ### 数据库配置
