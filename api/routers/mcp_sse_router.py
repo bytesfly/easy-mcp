@@ -36,8 +36,8 @@ mcp_sse_transport = SseServerTransport("/messages/")
 # Initialize MCP server
 mcp_sse_server = Server("Easy MCP SSE Server")
 
-_db_ctx = ContextVar("db")
-_tag_ctx = ContextVar("tag", default=None)
+_db_ctx = ContextVar("mcp_sse_db_ctx")
+_tag_ctx = ContextVar("mcp_sse_tag_ctx", default=None)
 
 
 @mcp_sse_server.list_tools()

@@ -44,8 +44,8 @@ mcp_stream_session_manager = StreamableHTTPSessionManager(
 )
 
 # Context variables for database and tag filtering
-_db_ctx = ContextVar("db")
-_tag_ctx = ContextVar("tag", default=None)
+_db_ctx = ContextVar("mcp_stream_db_ctx")
+_tag_ctx = ContextVar("mcp_stream_tag_ctx", default=None)
 
 
 @mcp_stream_server.list_tools()
