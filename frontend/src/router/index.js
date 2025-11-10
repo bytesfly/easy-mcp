@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { ROUTER_BASE } from '../config/router'
 
 // 使用懒加载优化路由加载性能
 // 登录页面不使用懒加载，因为它是首次访问的页面
@@ -203,7 +204,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(ROUTER_BASE),
   routes
 })
 

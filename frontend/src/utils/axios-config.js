@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { message } from 'ant-design-vue'
 import router from '../router'
+import { API_REQUEST_PREFIX } from '../config/router'
 
 /**
  * Configure axios with interceptors for global error handling
@@ -8,6 +9,42 @@ import router from '../router'
  * @returns {Object} - Configured axios instance
  */
 export const configureAxios = () => {
+  // Request interceptor to prepend API prefix when needed
+  axios.interceptors.request.use(
+    (config) => {
+      const prefix = API_REQUEST_PREFIX
+
+      if (!prefix) {
+        return config
+      }
+
+      if (typeof config.url !== 'string') {
+        return config
+      }
+
+      const url = config.url
+
+      // Skip if url already includes protocol or is protocol-relative
+      if (/^(https?:)?\/\//i.test(url)) {
+        return config
+      }
+
+      // Avoid double-prefixing
+      if (url.startsWith(prefix + '/') || url === prefix) {
+        return config
+      }
+
+      // Ensure url starts with '/'
+      const normalizedUrl = url.startsWith('/') ? url : `/${url}`
+
+      return {
+        ...config,
+        url: `${prefix}${normalizedUrl}`,
+      }
+    },
+    (error) => Promise.reject(error)
+  )
+
   // Response interceptor for handling errors
   axios.interceptors.response.use(
     (response) => {
